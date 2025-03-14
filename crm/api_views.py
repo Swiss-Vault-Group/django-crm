@@ -7,7 +7,6 @@ from crm.models.lead import Lead
 from django.contrib.auth.models import User
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
-import uuid
 import os
 
 class BearerTokenAuthentication(BaseAuthentication):
@@ -73,27 +72,13 @@ class B2BProspectCreateView(APIView):
         
         # Create a new prospect
         try:
-            # Get the API user
-            created_by = request.user
-            
-            # Generate a unique reference ID
-            reference_id = f"PROS-{uuid.uuid4().hex[:8].upper()}"
-            
-            # Create the lead with minimal information
             lead = Lead.objects.create(
                 email=email,
-                first_name="",  # Can be updated later
-                last_name="",   # Can be updated later
-                created_by=created_by,
-                status="new",
-                source="api",
-                reference_id=reference_id
             )
             
             return Response({
                 'id': lead.id,
                 'email': lead.email,
-                'reference_id': reference_id,
                 'status': 'success',
                 'message': 'Prospect created successfully'
             }, status=status.HTTP_201_CREATED)
