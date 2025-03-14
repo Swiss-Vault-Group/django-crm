@@ -113,7 +113,21 @@ INSTALLED_APPS = [
     'voip',
     'common.apps.CommonConfig',
     'settings'
+    'rest_framework',
+    'rest_framework.authtoken',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
+
+API_BEARER_TOKEN = os.environ.get('API_BEARER_TOKEN', 'dev')
+API_USER_EMAIL = os.environ.get('API_USER_EMAIL', 'api@example.com')
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
