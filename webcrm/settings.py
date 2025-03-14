@@ -20,6 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # from django.core.management.utils import get_random_secret_key
 # print(get_random_secret_key())
 SECRET_KEY = os.environ.get('SECRET_KEY', 'j1c=6$s-dh#$ywt@(q4cm=j&0c*!0x!e-qm6k1%yoliec(14tn')
+CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(',')
 
 # Add your hosts to the list.
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
