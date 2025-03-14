@@ -1,4 +1,5 @@
 import sys
+import os
 from pathlib import Path
 from django.utils.translation import gettext_lazy as _
 
@@ -18,47 +19,44 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # To get new value of key use code:
 # from django.core.management.utils import get_random_secret_key
 # print(get_random_secret_key())
-SECRET_KEY = 'j1c=6$s-dh#$ywt@(q4cm=j&0c*!0x!e-qm6k1%yoliec(15tn'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'j1c=6$s-dh#$ywt@(q4cm=j&0c*!0x!e-qm6k1%yoliec(14tn')
 
 # Add your hosts to the list.
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
 # Database
 DATABASES = {
     'default': {
-        # for MySQl
-        'ENGINE': 'django.db.backends.mysql',
-        'PORT': '3306',
-
-        # for PostgreSQL
-        # "ENGINE": "django.db.backends.postgresql",
-        # 'PORT': '5432',   # for PostgreSQL
-
-        'NAME': 'crm_db',
-        'USER': 'crm_user',
-        'PASSWORD': 'crmpass',
-        'HOST': 'localhost',
+        'ENGINE': os.environ.get('DB_ENGINE', 'django.db.backends.postgresql'),
+        'PORT': os.environ.get('DB_PORT', '5432'),
+        'NAME': os.environ.get('DB_NAME', 'crm_db'),
+        'USER': os.environ.get('DB_USER', 'crm_user'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', 'crmpass!'),
+        'HOST': os.environ.get('DB_HOST', 'db'),
     }
 }
 
-EMAIL_HOST = '<specify host>'   # 'smtp.example.com'
-EMAIL_HOST_PASSWORD = '<specify password>'
-EMAIL_HOST_USER = 'crm@example.com'
-EMAIL_PORT = 587
-EMAIL_SUBJECT_PREFIX = 'CRM: '
-EMAIL_USE_TLS = True
-SERVER_EMAIL = 'crm@example.com'
-DEFAULT_FROM_EMAIL = 'crm@example.com'
 
-ADMINS = [("<Admin1>", "<admin1_box@example.com>")]   # specify admin
+EMAIL_HOST = os.environ.get('EMAIL_HOST', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'crm@vaultx.ch')
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', '587'))
+EMAIL_SUBJECT_PREFIX = os.environ.get('EMAIL_SUBJECT_PREFIX', 'CRM: ')
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True').lower() == 'true'
+SERVER_EMAIL = os.environ.get('SERVER_EMAIL', 'noreply@vaultx.ch')
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'noreply@vaultx.ch')
+
+
+ADMINS_STR = os.environ.get('ADMINS', '<Admin1>:<admin@vaultx.ch>')
+ADMINS = [tuple(admin.split(':')) for admin in ADMINS_STR.split(',')]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'True').lower() == 'true'
 
-FORMS_URLFIELD_ASSUME_HTTPS = True
+FORMS_URLFIELD_ASSUME_HTTPS = os.environ.get('FORMS_URLFIELD_ASSUME_HTTPS', 'True').lower() == 'true'
 
 # Internationalization
-LANGUAGE_CODE = 'en'
+LANGUAGE_CODE = os.environ.get('LANGUAGE_CODE', 'en')
 LANGUAGES = [
     ('ar', 'Arabic'),
     ('cs', 'Czech'),
@@ -84,17 +82,17 @@ LANGUAGES = [
     ('zh-hans', 'Chinese'),
 ]
 
-TIME_ZONE = 'UTC'   # specify your time zone
+TIME_ZONE = os.environ.get('TIME_ZONE', 'UTC')
 
-USE_I18N = True
+USE_I18N = os.environ.get('USE_I18N', 'True').lower() == 'true'
 
-USE_TZ = True
+USE_TZ = os.environ.get('USE_TZ', 'True').lower() == 'true'
 
 LOCALE_PATHS = [
     BASE_DIR / 'locale',
 ]
 
-LOGIN_URL = '/admin/login/'
+LOGIN_URL = os.environ.get('LOGIN_URL', '/admin/login/')
 
 # Application definition
 INSTALLED_APPS = [
@@ -175,32 +173,32 @@ FIXTURE_DIRS = ['tests/fixtures']
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
-SITE_ID = 1
+SITE_ID = int(os.environ.get('SITE_ID', '1'))
 
-SECURE_HSTS_SECONDS = 0  # set to 31536000 for production server
+SECURE_HSTS_SECONDS = int(os.environ.get('SECURE_HSTS_SECONDS', '0'))  # set to 31536000 for production server
 # Set all the following to True for production server
-SECURE_HSTS_INCLUDE_SUBDOMAINS = False
-SECURE_SSL_REDIRECT = False
-SESSION_COOKIE_SECURE = False
-CSRF_COOKIE_SECURE = False
-SECURE_HSTS_PRELOAD = False
+SECURE_HSTS_INCLUDE_SUBDOMAINS = os.environ.get('SECURE_HSTS_INCLUDE_SUBDOMAINS', 'False').lower() == 'true'
+SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', 'False').lower() == 'true'
+SESSION_COOKIE_SECURE = os.environ.get('SESSION_COOKIE_SECURE', 'False').lower() == 'true'
+CSRF_COOKIE_SECURE = os.environ.get('CSRF_COOKIE_SECURE', 'False').lower() == 'true'
+SECURE_HSTS_PRELOAD = os.environ.get('SECURE_HSTS_PRELOAD', 'False').lower() == 'true'
 
 
 # ---- CRM settings ---- #
 
 # For more security, replace the url prefixes
 # with your own unique value.
-SECRET_CRM_PREFIX = '123/'
-SECRET_ADMIN_PREFIX = '456-admin/'
-SECRET_LOGIN_PREFIX = '789-login/'
+SECRET_CRM_PREFIX = os.environ.get('SECRET_CRM_PREFIX', '123/')
+SECRET_ADMIN_PREFIX = os.environ.get('SECRET_ADMIN_PREFIX', '456-admin/')
+SECRET_LOGIN_PREFIX = os.environ.get('SECRET_LOGIN_PREFIX', '789-login/')
 
 # Specify ip of host to avoid importing emails sent by CRM
-CRM_IP = "127.0.0.1"
+CRM_IP = os.environ.get('CRM_IP', "127.0.0.1")
 
-CRM_REPLY_TO = ["'Do not reply' <crm@example.com>"]
+CRM_REPLY_TO = os.environ.get('CRM_REPLY_TO', "['Do not reply' <noreply@vaultx.ch>]").split(',')
 
 # List of addresses to which users are not allowed to send mail.
-NOT_ALLOWED_EMAILS = []
+NOT_ALLOWED_EMAILS = os.environ.get('NOT_ALLOWED_EMAILS', '').split(',') if os.environ.get('NOT_ALLOWED_EMAILS') else []
 
 # List of applications on the main page and in the left sidebar.
 APP_ON_INDEX_PAGE = [
@@ -240,42 +238,42 @@ MODEL_ON_INDEX_PAGE = {
 }
 
 # Country VAT value
-VAT = 0    # %
+VAT = float(os.environ.get('VAT', '0'))    # %
 
 # 2-Step Verification Credentials for Google Accounts.
 #  OAuth 2.0
-CLIENT_ID = ''
-CLIENT_SECRET = ''
+CLIENT_ID = os.environ.get('CLIENT_ID', '')
+CLIENT_SECRET = os.environ.get('CLIENT_SECRET', '')
 OAUTH2_DATA = {
     'smtp.gmail.com': {
-        'scope': "https://mail.google.com/",
-        'accounts_base_url': 'https://accounts.google.com',
-        'auth_command': 'o/oauth2/auth',
-        'token_command': 'o/oauth2/token',
+        'scope': os.environ.get('OAUTH2_SCOPE', "https://mail.google.com/"),
+        'accounts_base_url': os.environ.get('OAUTH2_ACCOUNTS_BASE_URL', 'https://accounts.google.com'),
+        'auth_command': os.environ.get('OAUTH2_AUTH_COMMAND', 'o/oauth2/auth'),
+        'token_command': os.environ.get('OAUTH2_TOKEN_COMMAND', 'o/oauth2/token'),
     }
 }
 # Hardcoded dummy redirect URI for non-web apps.
-REDIRECT_URI = ''
+REDIRECT_URI = os.environ.get('REDIRECT_URI', '')
 
 # Credentials for Google reCAPTCHA.
-GOOGLE_RECAPTCHA_SITE_KEY = ''
-GOOGLE_RECAPTCHA_SECRET_KEY = ''
+GOOGLE_RECAPTCHA_SITE_KEY = os.environ.get('GOOGLE_RECAPTCHA_SITE_KEY', '')
+GOOGLE_RECAPTCHA_SECRET_KEY = os.environ.get('GOOGLE_RECAPTCHA_SECRET_KEY', '')
 
-GEOIP = False
-GEOIP_PATH = MEDIA_ROOT / 'geodb'
+GEOIP = os.environ.get('GEOIP', 'False').lower() == 'true'
+GEOIP_PATH = Path(os.environ.get('GEOIP_PATH', str(MEDIA_ROOT / 'geodb')))
 
 # For user profile list
-SHOW_USER_CURRENT_TIME_ZONE = False
+SHOW_USER_CURRENT_TIME_ZONE = os.environ.get('SHOW_USER_CURRENT_TIME_ZONE', 'False').lower() == 'true'
 
 NO_NAME_STR = _('Untitled')
 
 # For automated getting currency exchange rate
-LOAD_EXCHANGE_RATE = False
-LOADING_EXCHANGE_RATE_TIME = "6:30"
-LOAD_RATE_BACKEND = ""  # "crm.backends.<specify_backend>.<specify_class>"
+LOAD_EXCHANGE_RATE = os.environ.get('LOAD_EXCHANGE_RATE', 'False').lower() == 'true'
+LOADING_EXCHANGE_RATE_TIME = os.environ.get('LOADING_EXCHANGE_RATE_TIME', "6:30")
+LOAD_RATE_BACKEND = os.environ.get('LOAD_RATE_BACKEND', "")  # "crm.backends.<specify_backend>.<specify_class>"
 
 # Ability to mark payments through a representation
-MARK_PAYMENTS_THROUGH_REP = False
+MARK_PAYMENTS_THROUGH_REP = os.environ.get('MARK_PAYMENTS_THROUGH_REP', 'False').lower() == 'true'
 
 
 # Site headers
