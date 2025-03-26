@@ -274,7 +274,7 @@ REDIRECT_URI = os.environ.get('REDIRECT_URI', '')
 GOOGLE_RECAPTCHA_SITE_KEY = os.environ.get('GOOGLE_RECAPTCHA_SITE_KEY', '')
 GOOGLE_RECAPTCHA_SECRET_KEY = os.environ.get('GOOGLE_RECAPTCHA_SECRET_KEY', '')
 
-GEOIP = os.environ.get('GEOIP', 'False').lower() == 'true'
+GEOIP = os.environ.get('GEOIP', 'True').lower() == 'true'
 GEOIP_PATH = Path(os.environ.get('GEOIP_PATH', str(MEDIA_ROOT / 'geodb')))
 
 # For user profile list

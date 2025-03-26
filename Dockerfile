@@ -15,6 +15,8 @@ RUN apt-get update \
     default-libmysqlclient-dev \
     build-essential \
     gettext \
+    libgeoip-dev \
+    geoip-bin \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 

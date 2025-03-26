@@ -64,7 +64,8 @@ db.sqlite3
 
 # CRM stuff:
 local_settings.py
-media/
+media/*
+!/media/geodb/
 static/admin/
 
 # Flask stuff:

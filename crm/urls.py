@@ -16,6 +16,7 @@ from crm.views.got_massmails import got_contacts_massmails
 from crm.views.got_massmails import got_leads_massmails
 from crm.views.view_original_email import view_original_email
 from crm.views.change_owner_companies import change_owner_companies
+from crm.views.add_prospect import add_prospect
 from crm.api_views import B2BProspectCreateView
 
 urlpatterns = [
@@ -60,6 +61,7 @@ urlpatterns = [
         name='print_request'
     ),
     path('add-request/', add_request, name='add_request'),
+    path('add-prospect/', add_prospect, name='add_prospect'),
     path(
         'got-contacts-massmails/<int:object_id>/',
         staff_member_required(got_contacts_massmails),
@@ -91,5 +93,5 @@ urlpatterns = [
         staff_member_required(download_original_email),
         name='download_original_email'
     ),
-    path('api/b2b/prospects/create/', B2BProspectCreateView.as_view(), name='b2b_prospect_create'),
+    # path('api/b2b/prospects/create/', B2BProspectCreateView.as_view(), name='b2b_prospect_create'),
 ]
